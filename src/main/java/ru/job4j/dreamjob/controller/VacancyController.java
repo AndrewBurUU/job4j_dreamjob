@@ -7,9 +7,6 @@ import ru.job4j.dreamjob.model.*;
 import ru.job4j.dreamjob.repository.MemoryVacancyRepository;
 import ru.job4j.dreamjob.repository.VacancyRepository;
 
-import javax.servlet.http.*;
-import java.time.*;
-
 @Controller
 @RequestMapping("/vacancies") /** Работать с кандидатами будем по URI /vacancies/** */
 public class VacancyController {
@@ -30,6 +27,37 @@ public class VacancyController {
     @PostMapping("/create")
     public String create(@ModelAttribute Vacancy vacancy) {
         vacancyRepository.save(vacancy);
+        return "redirect:/vacancies";
+    }
+
+    @GetMapping("/{id}")
+    public String getById(Model model, @PathVariable int id) {
+        var vacancyOptional = vacancyRepository.findById(id);
+        if (vacancyOptional.isEmpty()) {
+            model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
+            return "errors/404";
+        }
+        model.addAttribute("vacancy", vacancyOptional.get());
+        return "vacancies/one";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute Vacancy vacancy, Model model) {
+        var isUpdated = vacancyRepository.update(vacancy);
+        if (!isUpdated) {
+            model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
+            return "errors/404";
+        }
+        return "redirect:/vacancies";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(Model model, @PathVariable int id) {
+        var isDeleted = vacancyRepository.deleteById(id);
+        if (!isDeleted) {
+            model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
+            return "errors/404";
+        }
         return "redirect:/vacancies";
     }
 }
