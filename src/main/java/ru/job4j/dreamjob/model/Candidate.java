@@ -11,7 +11,7 @@ public class Candidate {
 
     private String description;
 
-    private LocalDateTime creationDate;
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     public Candidate() {
     }
