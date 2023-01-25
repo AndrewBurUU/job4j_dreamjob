@@ -1,13 +1,14 @@
 package ru.job4j.dreamjob.service;
 
+import net.jcip.annotations.*;
 import org.springframework.stereotype.*;
 import ru.job4j.dreamjob.model.Vacancy;
-import ru.job4j.dreamjob.repository.MemoryVacancyRepository;
 import ru.job4j.dreamjob.repository.VacancyRepository;
 
 import java.util.Collection;
 import java.util.Optional;
 
+@ThreadSafe
 @Service
 public class SimpleVacancyService implements VacancyService {
 
