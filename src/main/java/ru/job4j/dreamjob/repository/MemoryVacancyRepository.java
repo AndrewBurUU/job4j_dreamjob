@@ -19,12 +19,12 @@ public class MemoryVacancyRepository implements VacancyRepository {
     private final ConcurrentHashMap<Integer, Vacancy> vacancies = new ConcurrentHashMap<>();
 
     public MemoryVacancyRepository() {
-        save(new Vacancy(0, "Intern Java Developer", "Стажер Java разработчик", LocalDateTime.now(), true));
-        save(new Vacancy(0, "Junior Java Developer", "Младший Java разработчик", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Junior+ Java Developer", "Java разработчик", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Middle Java Developer", "Старший Java разработчик", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Middle+ Java Developer", "Ведущий Java разработчик", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Senior Java Developer", "Главный Java разработчик", LocalDateTime.now(), false));
+        save(new Vacancy(0, "Intern Java Developer", "Стажер Java разработчик", LocalDateTime.now(), true, 1));
+        save(new Vacancy(0, "Junior Java Developer", "Младший Java разработчик", LocalDateTime.now(), false, 2));
+        save(new Vacancy(0, "Junior+ Java Developer", "Java разработчик", LocalDateTime.now(), false, 3));
+        save(new Vacancy(0, "Middle Java Developer", "Старший Java разработчик", LocalDateTime.now(), false, 1));
+        save(new Vacancy(0, "Middle+ Java Developer", "Ведущий Java разработчик", LocalDateTime.now(), false, 2));
+        save(new Vacancy(0, "Senior Java Developer", "Главный Java разработчик", LocalDateTime.now(), false, 3));
     }
 
     @Override
@@ -43,7 +43,8 @@ public class MemoryVacancyRepository implements VacancyRepository {
     public boolean update(Vacancy vacancy) {
         return vacancies.computeIfPresent(vacancy.getId(), (id, oldVacancy) -> {
             return new Vacancy(oldVacancy.getId(), vacancy.getTitle(),
-                    vacancy.getDescription(), vacancy.getCreationDate(), vacancy.getVisible());
+                    vacancy.getDescription(), vacancy.getCreationDate(), vacancy.getVisible(),
+                    vacancy.getCityId());
         }) != null;
     }
 
