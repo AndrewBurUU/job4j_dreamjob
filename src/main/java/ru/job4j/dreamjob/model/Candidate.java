@@ -5,6 +5,15 @@ import java.util.*;
 
 public class Candidate {
 
+    public static final Map<String, String> COLUMN_MAPPING = Map.of(
+            "id", "id",
+            "name", "name",
+            "description", "description",
+            "creation_date", "creationDate",
+            "city_id", "cityId",
+            "file_id", "fileId"
+    );
+
     private int id;
 
     private String name;
