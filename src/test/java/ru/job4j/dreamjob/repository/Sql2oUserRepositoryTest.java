@@ -1,15 +1,12 @@
 package ru.job4j.dreamjob.repository;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.job4j.dreamjob.configuration.DatasourceConfiguration;
 import ru.job4j.dreamjob.model.User;
 
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class Sql2oUserRepositoryTest {
 
@@ -50,11 +47,11 @@ public class Sql2oUserRepositoryTest {
     @Test
     public void whenSameEmailThenOneFail() {
         var user1 = sql2oUserRepository.save(new User(0, "user@gmail.com", "User1", "111"));
+        var user2 = sql2oUserRepository.save(new User(1, "user@gmail.com", "User2", "111"));
         var savedUser1 = sql2oUserRepository.findById(user1.get().getId());
+        var savedUser2 = sql2oUserRepository.findById(user2.get().getId());
         assertThat(savedUser1).usingRecursiveComparison().isEqualTo(user1);
-        assertThatThrownBy(() ->
-                sql2oUserRepository.save(new User(1, "user@gmail.com", "User2", "111")).get())
-                .isInstanceOf(RuntimeException.class);
+        assertThat(savedUser2).isEmpty();
     }
 
 }
