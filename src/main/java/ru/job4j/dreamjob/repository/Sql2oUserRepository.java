@@ -73,4 +73,5 @@ public class Sql2oUserRepository implements UserRepository {
             return query.executeAndFetch(User.class);
         }
     }
+
 }
