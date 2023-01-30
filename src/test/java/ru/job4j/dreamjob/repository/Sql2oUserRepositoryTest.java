@@ -49,9 +49,8 @@ public class Sql2oUserRepositoryTest {
         var user1 = sql2oUserRepository.save(new User(0, "user@gmail.com", "User1", "111"));
         var user2 = sql2oUserRepository.save(new User(1, "user@gmail.com", "User2", "111"));
         var savedUser1 = sql2oUserRepository.findById(user1.get().getId());
-        var savedUser2 = sql2oUserRepository.findById(user2.get().getId());
         assertThat(savedUser1).usingRecursiveComparison().isEqualTo(user1);
-        assertThat(savedUser2).isEmpty();
+        assertThat(user2).isEmpty();
     }
 
 }

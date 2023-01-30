@@ -30,7 +30,7 @@ public class Sql2oUserRepository implements UserRepository {
             user.setId(generatedId);
             return Optional.of(user);
         } catch (Exception e) {
-            return Optional.ofNullable(user);
+            return Optional.empty();
         }
     }
 
