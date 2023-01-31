@@ -11,7 +11,7 @@ import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.VacancyService;
 
-import java.util.List;
+import java.util.*;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -100,32 +100,50 @@ public class VacancyControllerTest {
     @Test
     public void whenRequestVacancyThenGetUpdatePage() {
         var vacancy = new Vacancy(1, "test1", "desc1", now(), true, 1, 2);
-        when(vacancyService.findById(1)).thenReturn(java.util.Optional.of(vacancy));
+        when(vacancyService.findById(1)).thenReturn(Optional.of(vacancy));
 
         var model = new ConcurrentModel();
         var view = vacancyController.getById(model, 1);
+        var actualVacancy = model.getAttribute("vacancy");
 
         assertThat(view).isEqualTo("vacancies/one");
+        assertThat(actualVacancy).isEqualTo(vacancy);
     }
 
-    @Disabled
     @Test
     public void whenRequestUpdateVacancyThenUpdateAndRedirectToVacanciesPage() throws Exception {
-        var vacancy1 = new Vacancy(1, "test1", "desc1", now(), true, 1, 2);
-        when(vacancyService.findById(1)).thenReturn(java.util.Optional.of(vacancy1));
+        var fileDto = new FileDto(testFile.getOriginalFilename(), testFile.getBytes());
+        var vacancyArgumentCaptor = ArgumentCaptor.forClass(Vacancy.class);
+        var fileDtoArgumentCaptor = ArgumentCaptor.forClass(FileDto.class);
+        when(vacancyService.update(vacancyArgumentCaptor.capture(), fileDtoArgumentCaptor.capture())).thenReturn(true);
 
-        var vacancy2 = new Vacancy(1, "test2", "desc2", now(), true, 1, 2);
         var model = new ConcurrentModel();
-        var view = vacancyController.update(vacancy2, testFile, model);
+        var vacancy = new Vacancy(1, "test2", "desc2", now(), true, 1, 2);
+        var view = vacancyController.update(vacancy, testFile, model);
+        var actualVacancy = vacancyArgumentCaptor.getValue();
+        var actualFileDto = fileDtoArgumentCaptor.getValue();
 
         assertThat(view).isEqualTo("redirect:/vacancies");
+        assertThat(actualVacancy).isEqualTo(vacancy);
+        assertThat(fileDto).usingRecursiveComparison().isEqualTo(actualFileDto);
     }
 
-    @Disabled
     @Test
-    public void whenRequestDeleteVacancyThenDeleteAndRedirectToVacanciesPage() throws Exception {
-        var vacancy1 = new Vacancy(1, "test1", "desc1", now(), true, 1, 2);
-        when(vacancyService.findById(1)).thenReturn(java.util.Optional.of(vacancy1));
+    public void whenRequestUpdateAbsentVacancyThenErrorPage() throws Exception {
+        var vacancyArgumentCaptor = ArgumentCaptor.forClass(Vacancy.class);
+        var fileDtoArgumentCaptor = ArgumentCaptor.forClass(FileDto.class);
+        when(vacancyService.update(vacancyArgumentCaptor.capture(), fileDtoArgumentCaptor.capture())).thenReturn(false);
+
+        var model = new ConcurrentModel();
+        var vacancy = new Vacancy(1, "test2", "desc2", now(), true, 1, 2);
+        var view = vacancyController.update(vacancy, testFile, model);
+
+        assertThat(view).isEqualTo("errors/404");
+    }
+
+    @Test
+    public void whenRequestDeleteVacancyThenDeleteAndRedirectToVacanciesPage() {
+        when(vacancyService.deleteById(1)).thenReturn(true);
 
         var model = new ConcurrentModel();
         var view = vacancyController.delete(model, 1);

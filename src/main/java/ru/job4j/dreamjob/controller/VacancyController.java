@@ -8,10 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.*;
 import ru.job4j.dreamjob.service.CityService;
-import ru.job4j.dreamjob.service.FileService;
 import ru.job4j.dreamjob.service.VacancyService;
-
-import javax.servlet.http.*;
 
 @ThreadSafe
 @Controller
